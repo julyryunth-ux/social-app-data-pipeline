@@ -32,6 +32,8 @@ Data Lake(25) → Warehouse(원본 23 + 전처리 2) → Mart 2종 → Railway(�
 
 [Tableau Public에서 보기](https://public.tableau.com/views/teens_sns_dashboard/sheet13?:language=ko-KR&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
 
+![dashboard](docs/dashboard.png)
+
 전체 유저 현황 / 매출 KPI / 이용패턴 KPI 3개 뷰로 구성.
 KPI 임계선과 데이터 기반으로 도출한 서비스 종료 시점을 함께 표시해
 운영자가 이상 구간을 즉시 식별할 수 있도록 설계했습니다.
