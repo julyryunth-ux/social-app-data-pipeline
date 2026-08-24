@@ -1,0 +1,32 @@
+# 원본 데이터 및 대시보드 파일 (계약상 공유 불가)
+source/
+tableau_dashboard/
+dashboard/
+*.csv
+*.parquet
+*.xlsx
+*.twb
+*.twbx
+
+# 노트북 (계약상 공유 불가)
+*.ipynb
+.ipynb_checkpoints/
+
+# 환경변수
+.env
+*.env
+!.env.example
+
+# Airflow
+logs/
+airflow.db
+airflow-webserver.pid
+standalone_admin_password.txt
+
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# OS
+.DS_Store
