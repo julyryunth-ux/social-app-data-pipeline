@@ -3,7 +3,7 @@
 - 최초 실행: 전체 데이터 풀 로드 (FULL LOAD)
 - 이후 매일: 증분 데이터만 업데이트 (INCREMENTAL LOAD)
 - 메타데이터 테이블(pipeline_sync_log)로 마지막 동기화 시점 추적
-- SSCursor(서버사이드 커서)로 대용량 테이블 메모리 안전 처리
+- SSDictCursor(서버사이드 커서)로 대용량 테이블 메모리 안전 처리
 
 🔧 최종 수정 사항 (2024 데이터 명세서 기반):
 - accounts_attendance: created_at 없음 → None (전체 재적재)
@@ -125,7 +125,7 @@ PREPROCESSORS = {
 
 
 # =========================================================
-# SSCursor 스트리밍 헬퍼
+# SSDictCursor 스트리밍 헬퍼
 # ─────────────────────────────────────────────────────────
 # pd.read_sql + chunksize는 MySQL에서 전체 결과를 서버 메모리에
 # 올린 뒤 잘라서 전달하므로 대용량 테이블에서 OOM 발생.
@@ -146,7 +146,7 @@ def _raw_conn():
 
 
 def stream_query_chunks(query: str, chunk_size: int):
-    """SSCursor로 쿼리 결과를 chunk_size 단위 DataFrame으로 yield"""
+    """SSDictCursor로 쿼리 결과를 chunk_size 단위 DataFrame으로 yield"""
     conn = _raw_conn()
     try:
         with conn.cursor() as cursor:
@@ -258,7 +258,7 @@ def load_table(table_name: str, sync_start: datetime):
     if not is_full_load and pk:
         existing_ids = _get_existing_ids(wh_engine, wh_table, pk)
 
-    # ── SSCursor 스트리밍 청크 처리 ──
+    # ── SSDictCursor 스트리밍 청크 처리 ──
     total_rows  = 0
     first_chunk = True
 
@@ -340,7 +340,7 @@ INCREMENTAL_GROUP_2 = [
 
 with DAG(
     dag_id            = "load_to_warehouse",
-    description       = "RAW DB → DW 전체/증분 적재 (25 tables, SSCursor, 데이터명세서 반영)",
+    description       = "RAW DB → DW 전체/증분 적재 (25 tables, SSDictCursor, 데이터명세서 반영)",
     start_date        = datetime(2024, 1, 1),
     schedule_interval = "0 3 * * *",   # 매일 오전 3시 (UTC)
     catchup           = False,
