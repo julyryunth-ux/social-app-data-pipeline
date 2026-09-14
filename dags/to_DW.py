@@ -13,7 +13,7 @@
 - user_properties: created_at 없음 → None (전체 재적재)
 - hackle_events: event_datetime 사용 (created_at 대신)
 """
-
+import os
 import gc
 import logging
 import pandas as pd
@@ -34,8 +34,7 @@ logger = logging.getLogger(__name__)
 # -------------------------
 # DB 연결 정보
 # -------------------------
-RAW_DB_URL = "mysql+pymysql://root:1234@final-mysql:3306/final"
-WH_DB_URL  = "mysql+pymysql://root:1234@final-mysql:3306/warehouse_db"
+WH_DB_URL  = os.environ["WH_DB_URL"]
 
 # -------------------------
 # 테이블별 설정
@@ -135,11 +134,11 @@ PREPROCESSORS = {
 def _raw_conn():
     """pymysql SSDictCursor 전용 커넥션"""
     return pymysql.connect(
-        host        = "final-mysql",
-        user        = "root",
-        password    = "1234",
-        database    = "final",
-        port        = 3306,
+        host        = os.environ["RAW_DB_HOST"],
+        user        = os.environ["RAW_DB_USER"],
+        password    = os.environ["RAW_DB_PASSWORD"],
+        database    = os.environ["RAW_DB_NAME"],
+        port        = int(os.environ.get("RAW_DB_PORT", 3306)),
         cursorclass = pymysql.cursors.SSDictCursor,
         connect_timeout = 30,
     )
